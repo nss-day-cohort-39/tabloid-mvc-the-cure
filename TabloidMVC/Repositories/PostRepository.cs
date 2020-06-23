@@ -35,7 +35,8 @@ namespace TabloidMVC.Repositories
                               LEFT JOIN UserProfile u ON p.UserProfileId = u.id
                               LEFT JOIN UserType ut ON u.UserTypeId = ut.id
                         WHERE IsApproved = 1 AND PublishDateTime < SYSDATETIME()
-                        AND WasDeleted = 0";
+                        AND WasDeleted = 0
+                        ORDER BY p.PublishDateTime DESC";
                     var reader = cmd.ExecuteReader();
 
                     var posts = new List<Post>();
