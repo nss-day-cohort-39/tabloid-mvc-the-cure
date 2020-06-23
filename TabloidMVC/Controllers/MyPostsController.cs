@@ -27,9 +27,8 @@ namespace TabloidMVC.Controllers
         {
             int UserId = GetCurrentUserProfileId();
             var posts = _postRepository.GetCurrentUsersPosts(UserId);
-            List<Post> sortedList = posts.OrderByDescending(p => p.CreateDateTime).ToList();
-
-            return View(sortedList);
+            
+            return View(posts);
         }
 
         public IActionResult Details(int id)
