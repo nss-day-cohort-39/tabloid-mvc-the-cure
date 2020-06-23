@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using System.Security.Claims;
+using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 
@@ -44,7 +45,7 @@ namespace TabloidMVC.Controllers
         public IActionResult Create()
         {
             var vm = new PostCreateViewModel();
-            vm.CategoryOptions = _categoryRepository.GetAll();
+            vm.CategoryOptions = _categoryRepository.GetAllCategories();
             return View(vm);
         }
 
@@ -63,7 +64,7 @@ namespace TabloidMVC.Controllers
             } 
             catch
             {
-                vm.CategoryOptions = _categoryRepository.GetAll();
+                vm.CategoryOptions = _categoryRepository.GetAllCategories();
                 return View(vm);
             }
         }
@@ -73,5 +74,30 @@ namespace TabloidMVC.Controllers
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return int.Parse(id);
         }
+
+        public IActionResult Delete(int id)
+        {
+            //int UserProfileId = GetCurrentUserProfileId();
+            var post = _postRepository.GetPublisedPostById(id);
+            return View(post);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id, Post post)
+        {
+            try
+            {
+                _postRepository.DeletePost(id);
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                // If something goes wrong, just keep the user on the same page so they can try again
+                return View(post);
+            }
+        }
+
     }
 }
