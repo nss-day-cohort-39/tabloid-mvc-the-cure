@@ -45,7 +45,7 @@ namespace TabloidMVC.Controllers
         public IActionResult Create()
         {
             var vm = new PostCreateViewModel();
-            vm.CategoryOptions = _categoryRepository.GetAll();
+            vm.CategoryOptions = _categoryRepository.GetAllCategories();
             return View(vm);
         }
 
@@ -64,7 +64,7 @@ namespace TabloidMVC.Controllers
             } 
             catch
             {
-                vm.CategoryOptions = _categoryRepository.GetAll();
+                vm.CategoryOptions = _categoryRepository.GetAllCategories();
                 return View(vm);
             }
         }
