@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
@@ -28,10 +29,11 @@ namespace TabloidMVC.Repositories
                     {
                         categories.Add(NewCategoryFromReader(reader));
                     }
+                    List<Category> filteredCategories = categories.OrderBy(c => c.Name).ToList();
 
                     reader.Close();
 
-                    return categories;
+                    return filteredCategories;
                 }
             }
         }
