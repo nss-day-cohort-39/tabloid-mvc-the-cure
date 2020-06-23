@@ -61,7 +61,7 @@ namespace TabloidMVC.Controllers
                 _postRepository.Add(vm.Post);
 
                 return RedirectToAction("Details", new { id = vm.Post.Id });
-            } 
+            }
             catch
             {
                 vm.CategoryOptions = _categoryRepository.GetAllCategories();
@@ -99,32 +99,42 @@ namespace TabloidMVC.Controllers
             }
         }
 
-        public ActionResult Edit(int id)
+        public IActionResult Edit(int id)
         {
-            var vm = new PostCreateViewModel();
-            vm.CategoryOptions = _categoryRepository.GetAll();
-            vm.CategoryOptions = _categoryRepository.GetAll();
+            PostCreateViewModel vm = new PostCreateViewModel();
+            vm.CategoryOptions = _categoryRepository.GetAllCategories();
+            vm.Post = _postRepository.GetPublisedPostById(id);
 
             return View(vm);
         }
 
-        // POST: OwnersController/Edit/5
+        // POST
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, Owner owner)
+        public IActionResult Edit(int id, PostCreateViewModel vm)
         {
             try
             {
-                _ownerRepo.UpdateOwner(owner);
+                vm.CategoryOptions = _categoryRepository.GetAllCategories();
+                vm.Post.UserProfileId = GetCurrentUserProfileId();
+                vm.Post.Id = id;
 
-                return RedirectToAction("Index");
+
+
+                vm.Post.CreateDateTime = DateAndTime.Now;
+
+                _postRepository.UpdatePost(vm.Post);
+
+                return RedirectToAction("Details", new { id = vm.Post.Id });
             }
             catch
             {
-                return View(owner);
+                vm.CategoryOptions = _categoryRepository.GetAllCategories();
+                return View(vm);
             }
-        }
 
+
+        }
 
     }
 }

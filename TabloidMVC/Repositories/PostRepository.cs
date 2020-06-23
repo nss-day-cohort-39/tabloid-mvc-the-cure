@@ -163,7 +163,7 @@ namespace TabloidMVC.Repositories
             }
         }
 
-        public void Update(Post post)
+        public void UpdatePost(Post post)
         {
             using (var conn = Connection)
             {
@@ -171,12 +171,13 @@ namespace TabloidMVC.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO Post (
-                            Title, Content, ImageLocation, CreateDateTime, PublishDateTime,
-                            IsApproved, CategoryId, UserProfileId )
-                        VALUES (
-                            @Title, @Content, @ImageLocation, @CreateDateTime, @PublishDateTime,
-                            @IsApproved, @CategoryId, @UserProfileId )
+                        UPDATE Post 
+                            SET Title = @Title, 
+                                Content = @Content, 
+                                ImageLocation = @ImageLocation, 
+                                CreateDateTime = @CreateDateTime, 
+                                PublishDateTime = @PublishDateTime,
+                                CategoryId = @CategoryId 
                             WHERE Id = @id"
                             ;
                     cmd.Parameters.AddWithValue("@Title", post.Title);
