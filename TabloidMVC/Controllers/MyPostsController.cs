@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
 using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
@@ -10,12 +12,12 @@ using TabloidMVC.Repositories;
 namespace TabloidMVC.Controllers
 {
     [Authorize]
-    public class PostController : Controller
+    public class MyPostsController : Controller
     {
         private readonly PostRepository _postRepository;
         private readonly CategoryRepository _categoryRepository;
 
-        public PostController(IConfiguration config)
+        public MyPostsController(IConfiguration config)
         {
             _postRepository = new PostRepository(config);
             _categoryRepository = new CategoryRepository(config);
@@ -23,7 +25,9 @@ namespace TabloidMVC.Controllers
 
         public IActionResult Index()
         {
-            var posts = _postRepository.GetAllUsersPosts();
+            int UserId = GetCurrentUserProfileId();
+            var posts = _postRepository.GetCurrentUsersPosts(UserId);
+            
             return View(posts);
         }
 
@@ -61,7 +65,7 @@ namespace TabloidMVC.Controllers
                 _postRepository.Add(vm.Post);
 
                 return RedirectToAction("Details", new { id = vm.Post.Id });
-            } 
+            }
             catch
             {
                 vm.CategoryOptions = _categoryRepository.GetAllCategories();
@@ -74,30 +78,5 @@ namespace TabloidMVC.Controllers
             string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
             return int.Parse(id);
         }
-
-        public IActionResult Delete(int id)
-        {
-            //int UserProfileId = GetCurrentUserProfileId();
-            var post = _postRepository.GetPublisedPostById(id);
-            return View(post);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id, Post post)
-        {
-            try
-            {
-                _postRepository.DeletePost(id);
-
-                return RedirectToAction("Index");
-            }
-            catch
-            {
-                // If something goes wrong, just keep the user on the same page so they can try again
-                return View(post);
-            }
-        }
-
     }
 }
