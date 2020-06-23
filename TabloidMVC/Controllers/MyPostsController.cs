@@ -2,19 +2,22 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
+using System.Collections.Generic;
+using System.Linq;
 using System.Security.Claims;
+using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Controllers
 {
     [Authorize]
-    public class PostController : Controller
+    public class MyPostsController : Controller
     {
         private readonly PostRepository _postRepository;
         private readonly CategoryRepository _categoryRepository;
 
-        public PostController(IConfiguration config)
+        public MyPostsController(IConfiguration config)
         {
             _postRepository = new PostRepository(config);
             _categoryRepository = new CategoryRepository(config);
@@ -22,8 +25,11 @@ namespace TabloidMVC.Controllers
 
         public IActionResult Index()
         {
-            var posts = _postRepository.GetAllUsersPosts();
-            return View(posts);
+            int UserId = GetCurrentUserProfileId();
+            var posts = _postRepository.GetCurrentUsersPosts(UserId);
+            List<Post> sortedList = posts.OrderByDescending(p => p.CreateDateTime).ToList();
+
+            return View(sortedList);
         }
 
         public IActionResult Details(int id)
@@ -60,7 +66,7 @@ namespace TabloidMVC.Controllers
                 _postRepository.Add(vm.Post);
 
                 return RedirectToAction("Details", new { id = vm.Post.Id });
-            } 
+            }
             catch
             {
                 vm.CategoryOptions = _categoryRepository.GetAll();
