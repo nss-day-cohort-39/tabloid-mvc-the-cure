@@ -184,10 +184,11 @@ namespace TabloidMVC.Repositories
                     cmd.Parameters.AddWithValue("@ImageLocation", DbUtils.ValueOrDBNull(post.ImageLocation));
                     cmd.Parameters.AddWithValue("@CreateDateTime", post.CreateDateTime);
                     cmd.Parameters.AddWithValue("@PublishDateTime", DbUtils.ValueOrDBNull(post.PublishDateTime));
-                    cmd.Parameters.AddWithValue("@IsApproved", post.IsApproved);
                     cmd.Parameters.AddWithValue("@CategoryId", post.CategoryId);
+                    cmd.Parameters.AddWithValue("@id", post.Id);
 
-                    post.Id = (int)cmd.ExecuteScalar();
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }

@@ -99,5 +99,32 @@ namespace TabloidMVC.Controllers
             }
         }
 
+        public ActionResult Edit(int id)
+        {
+            var vm = new PostCreateViewModel();
+            vm.CategoryOptions = _categoryRepository.GetAll();
+            vm.CategoryOptions = _categoryRepository.GetAll();
+
+            return View(vm);
+        }
+
+        // POST: OwnersController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, Owner owner)
+        {
+            try
+            {
+                _ownerRepo.UpdateOwner(owner);
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return View(owner);
+            }
+        }
+
+
     }
 }
