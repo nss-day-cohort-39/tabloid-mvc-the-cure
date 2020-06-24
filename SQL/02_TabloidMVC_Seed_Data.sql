@@ -17,6 +17,7 @@ SET IDENTITY_INSERT [Category] OFF
 INSERT INTO [Tag] ([Name])
 VALUES ('C#'), ('JavaScript'), ('Cyclopean Terrors'), ('Family');
 
+DELETE FROM UserProfile Where Id = 1
 INSERT INTO [UserProfile] (
 	[FirstName], [LastName], [DisplayName], [Email], [CreateDateTime], [ImageLocation], [UserTypeId])
 VALUES ('Admina', 'Strator', 'admin', 'admin@example.com', '06-14-2020', NULL, 1);
