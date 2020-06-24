@@ -1,55 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using TabloidMVC.Models.ViewModels;
+using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Controllers
 {
     public class PostTagController : Controller
     {
-        // GET: PostTagController
-        public ActionResult Index(int id)
+        private readonly TagRepository _tagRepository;
+        private readonly PostRepository _postRepo;
+
+
+        public PostTagController(IConfiguration config)
         {
-            return View();
+            _tagRepository = new TagRepository(config);
+            _postRepo = new PostRepository(config);
         }
 
         // GET: PostTagController/Create
-        public ActionResult Create()
+        public ActionResult Create(int id)
         {
-            return View();
+            var tags = _tagRepository.GetTagsByPostId(id);
+            var post = _postRepo.GetPublishedPostById(id);
+            var vm = new TagIndexViewModel()
+            {
+                PostTags = tags,
+                Post = post,
+            };
+            return View(vm);
         }
 
         // POST: PostTagController/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Create(TagIndexViewModel vm, int id)
         {
             try
             {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
-        }
-
-        // GET: PostTagController/Edit/5
-        public ActionResult Edit(int id)
-        {
-            return View();
-        }
-
-        // POST: PostTagController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
             catch
             {
@@ -70,7 +59,7 @@ namespace TabloidMVC.Controllers
         {
             try
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
             catch
             {
