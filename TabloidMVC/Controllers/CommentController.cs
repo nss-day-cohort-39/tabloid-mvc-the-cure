@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using TabloidMVC.Models;
 using TabloidMVC.Repositories;
 using System;
-using System.Collections.Generic;
+using System.Security.Claims;
+using TabloidMVC.Models.ViewModels;
 
 namespace TabloidMVC.Controllers
 {
@@ -12,38 +12,57 @@ namespace TabloidMVC.Controllers
     public class CommentController : Controller
     {
         private readonly CommentRepository _commentRepo;
-        private int postId;
+        private readonly PostRepository _postRepo;
 
         public CommentController(IConfiguration config)
         {
             _commentRepo = new CommentRepository(config);
+            _postRepo = new PostRepository(config);
         }
 
-        public IActionResult Index()
+        public IActionResult Index(int id)
         {
-            var comments = _commentRepo.GetCommentsByPostId(postId);
-            return View(comments);
+            var comments = _commentRepo.GetCommentsByPostId(id);
+            var post = _postRepo.GetPublishedPostById(id);
+            var commVM = new CommentIndexViewModel()
+            {
+                PostComments = comments,
+                Post = post,
+            };
+            return View(commVM);
         }
 
-        public IActionResult Create()
+        public IActionResult Create(int id)
         {
-            var comment = new Comment();
-            return View(comment);
+            var commVM = new CommentIndexViewModel();
+            commVM.PostComments = _commentRepo.GetCommentsByPostId(id);
+            return View(commVM);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(Comment comment)
+        public ActionResult Create(CommentIndexViewModel commVM, int id)
         {
             try
             {
-                _commentRepo.AddComment(comment);
-                return RedirectToAction("Index");
+                commVM.Comment.UserProfileId = GetCurrentUserProfileId();
+                commVM.Comment.PostId = id;
+                commVM.PostComments = _commentRepo.GetCommentsByPostId(id);
+                commVM.Comment.CreateDateTime = DateTime.Now;
+                _commentRepo.AddComment(commVM.Comment);
+                return RedirectToAction("Index", new { id = id });
             }
             catch (Exception ex)
             {
-                return View(comment);
+                commVM.PostComments = _commentRepo.GetCommentsByPostId(id);
+                return View(commVM);
             }
+        }
+
+        private int GetCurrentUserProfileId()
+        {
+            string id = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            return int.Parse(id);
         }
     }
 }

@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TabloidMVC.Models.Comment>
+﻿@model TabloidMVC.Models.ViewModels.CommentIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
@@ -9,52 +9,39 @@
     <h1>Comments</h1>
 
     <p>
-        <a class="btn btn-primary" asp-action="Create">New Comment</a>
+        <a class="btn btn-primary" asp-controller="Comment" asp-route-id="@Model.Post.Id" asp-action="Create">New Comment</a>
     </p>
 
     <table class="table">
             <thead>
                 <tr>
                     <th>
-                        @Html.DisplayNameFor(model => model.PostId)
+                        Subject
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.UserProfileId)
+                        Comment
                     </th>
                     <th>
-                        @Html.DisplayNameFor(model => model.Subject)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Content)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.CreateDateTime)
+                        Date
                     </th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var item in @Model.PostComments)
                 {
                     <tr>
                         <td>
-                            @Html.DisplayFor(modelItem => item.PostId)
+                            @item.Subject 
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.UserProfileId)
+                            @item.Content
                         </td>
                         <td>
-                            @Html.DisplayFor(modelItem => item.Subject)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Content)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.CreateDateTime)
+                            @item.CreateDateTime
                         </td>
                         <td>
                             @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                            @Html.ActionLink("Details", "Details", new { id = item.Id }) |
                             @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                         </td>
                     </tr>

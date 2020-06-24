@@ -29,7 +29,7 @@ namespace TabloidMVC.Controllers
 
         public IActionResult Details(int id)
         {
-            var post = _postRepository.GetPublisedPostById(id);
+            var post = _postRepository.GetPublishedPostById(id);
             if (post == null)
             {
                 int userId = GetCurrentUserProfileId();
@@ -78,7 +78,7 @@ namespace TabloidMVC.Controllers
         public IActionResult Delete(int id)
         {
             //int UserProfileId = GetCurrentUserProfileId();
-            var post = _postRepository.GetPublisedPostById(id);
+            var post = _postRepository.GetPublishedPostById(id);
             return View(post);
         }
 
@@ -103,7 +103,7 @@ namespace TabloidMVC.Controllers
         {
             PostCreateViewModel vm = new PostCreateViewModel();
             vm.CategoryOptions = _categoryRepository.GetAllCategories();
-            vm.Post = _postRepository.GetPublisedPostById(id);
+            vm.Post = _postRepository.GetPublishedPostById(id);
 
             return View(vm);
         }
@@ -118,9 +118,6 @@ namespace TabloidMVC.Controllers
                 vm.CategoryOptions = _categoryRepository.GetAllCategories();
                 vm.Post.UserProfileId = GetCurrentUserProfileId();
                 vm.Post.Id = id;
-
-
-
                 vm.Post.CreateDateTime = DateAndTime.Now;
 
                 _postRepository.UpdatePost(vm.Post);
