@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -48,5 +47,65 @@ namespace TabloidMVC.Repositories
             };
         }
 
+        public void Add(Category category)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Category (
+                           Name
+                        )
+                        OUTPUT INSERTED.Id
+                        VALUES (
+                            @Name 
+                        )";
+                    cmd.Parameters.AddWithValue("@Name", category.Name);
+
+                    category.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+        public void Edit(Category category)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        INSERT INTO Category (
+                            Name 
+                        )
+                        OUTPUT INSERTED.ID
+                        VALUES (
+                            @Name
+                        )";
+                    cmd.Parameters.AddWithValue("@Name", category.Name);
+                    
+
+                    category.Id = (int)cmd.ExecuteScalar();
+                }
+            }
+        }
+
+        public void DeleteCategory(int categoryId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                         UPDATE CATEGORY SET WasDeleted = 1 WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", categoryId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
