@@ -1,4 +1,4 @@
-﻿@model IEnumerable<TabloidMVC.Models.Category>
+﻿@model IEnumerable<TabloidMVC.Models.Tag>
 
 @{
     ViewData["Title"] = "Index";
@@ -6,10 +6,10 @@
 
 
 <div class="container pt-5">
-    <h1>Categories</h1>
+    <h1>Tags</h1>
 
     <p>
-        <a class="btn btn-primary" asp-action="Create">New Category</a>
+        <a class="btn btn-primary" asp-action="Create">New Tag</a>
     </p>
     <table class="table table-striped">
         <thead>
@@ -17,7 +17,6 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
-                <th></th>
             </tr>
         </thead>
         <tbody>

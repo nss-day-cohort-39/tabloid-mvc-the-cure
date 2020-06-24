@@ -20,5 +20,7 @@ namespace TabloidMVC.Models
         public DateTime CreateDateTime { get; set; }
         
         public List<Comment> Comments { get; set; }
+
+        public Post Post { get; set; }
     }
 }
