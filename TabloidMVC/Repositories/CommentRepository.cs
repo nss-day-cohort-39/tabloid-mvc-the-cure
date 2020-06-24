@@ -12,7 +12,7 @@ namespace TabloidMVC.Repositories
         public CommentRepository(IConfiguration config) : base(config) { }
 
 
-        public List<Comment> GetCommentsByPostId(int postId)
+        public List<Comment> GetCommentsByPostId(int id)
         {
             using (var conn = Connection)
             {
@@ -31,7 +31,7 @@ namespace TabloidMVC.Repositories
                         JOIN Post p ON c.PostId = p.Id
                         WHERE p.Id = @postId";
 
-                    cmd.Parameters.AddWithValue("@postId", postId);
+                    cmd.Parameters.AddWithValue("@postId", id);
                     var reader = cmd.ExecuteReader();
                     var comments = new List<Comment>();
 
@@ -55,22 +55,19 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"
                         INSERT INTO Comment 
-                            (Id,
-                            PostId,
+                            (PostId,
                             UserProfileId,
                             Subject,
                             Content,
                             CreateDateTime)
                         OUTPUT INSERTED.Id
                         VALUES 
-                            (@Id, 
-                            @PostId,
+                            (@PostId,
                             @UserProfileId,
                             @Subject,
                             @Content,
                             @CreateDateTime)";
 
-                    cmd.Parameters.AddWithValue("@Id", comment.Id);
                     cmd.Parameters.AddWithValue("@PostId", comment.PostId);
                     cmd.Parameters.AddWithValue("@UserProfileId", comment.UserProfileId);
                     cmd.Parameters.AddWithValue("@Subject", comment.Subject);
