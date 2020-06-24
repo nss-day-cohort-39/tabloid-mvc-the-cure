@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using System.Security.Claims;
+using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 
@@ -24,6 +25,26 @@ namespace TabloidMVC.Controllers
         {
             var categories = _categoryRepository.GetAllCategories();
             return View(categories);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult Create(Category cgy)
+        {
+            try
+            {
+                _categoryRepository.Add(cgy);
+
+                return RedirectToAction("Index", new { id = cgy.Id });
+            }
+            catch
+            {
+                return View(cgy);
+            }
         }
 
     }
