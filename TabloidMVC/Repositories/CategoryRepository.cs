@@ -47,7 +47,38 @@ namespace TabloidMVC.Repositories
             };
         }
 
-        public void Add(Category category)
+        public Category GetCategoryById(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                       SELECT c.Id, 
+                              c.Name
+                         FROM Category c
+                         WHERE c.id = @id 
+                       ";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+                    var reader = cmd.ExecuteReader();
+
+                    Category category = null;
+
+                    if (reader.Read())
+                    {
+                        category = NewCategoryFromReader(reader);
+                    }
+
+                    reader.Close();
+
+                    return category;
+                }
+            }
+        }
+
+        public void CreateCategory(Category category)
         {
             using (var conn = Connection)
             {
@@ -69,7 +100,7 @@ namespace TabloidMVC.Repositories
             }
         }
 
-        public void Edit(Category category)
+        public void UpdateCategory(Category category)
         {
             using (var conn = Connection)
             {
@@ -77,17 +108,15 @@ namespace TabloidMVC.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                        INSERT INTO Category (
-                            Name 
-                        )
-                        OUTPUT INSERTED.ID
-                        VALUES (
-                            @Name
-                        )";
+                        UPDATE Category 
+                            SET [Name] = @Name
+                            WHERE Id = @id"
+                            ;
                     cmd.Parameters.AddWithValue("@Name", category.Name);
-                    
+                    cmd.Parameters.AddWithValue("@id", category.Id);
 
-                    category.Id = (int)cmd.ExecuteScalar();
+
+                    cmd.ExecuteNonQuery();
                 }
             }
         }
@@ -100,7 +129,7 @@ namespace TabloidMVC.Repositories
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = @"
-                         UPDATE CATEGORY SET WasDeleted = 1 WHERE id = @id";
+                         DELETE FROM Category WHERE id = @id";
                     cmd.Parameters.AddWithValue("@id", categoryId);
 
                     cmd.ExecuteNonQuery();
