@@ -46,6 +46,35 @@ namespace TabloidMVC.Repositories
             }
         }
 
+        public Comment GetCommentById(int id)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT 
+                            Id,
+                            Subject,
+                            Content
+                        FROM Comment
+                        WHERE Id = @id
+                    ";
+                    cmd.Parameters.AddWithValue("@id", id);
+                    var reader = cmd.ExecuteReader();
+                    Comment comment = null;
+
+                    if (reader.Read())
+                    {
+                        comment = NewCommentFromReader(reader);
+                    }
+                    reader.Close();
+                    return comment;
+                }
+            }
+        }
+
         public void AddComment(Comment comment)
         {
             using (var conn = Connection)
@@ -79,16 +108,39 @@ namespace TabloidMVC.Repositories
             }
         }
 
+        public void EditComment(Comment comment)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        UPDATE Comment
+                        SET 
+                            //PostId = @PostId,
+                            Subject = @Subject,
+                            Content = @Content
+                        WHERE Id = @id
+                    ";
+                    cmd.Parameters.AddWithValue("@Subject", comment.Subject);
+                    cmd.Parameters.AddWithValue("@Content", comment.Content);
+                    //cmd.Parameters.AddWithValue("@PostId", comment.PostId);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         private Comment NewCommentFromReader(SqlDataReader reader)
         {
             return new Comment()
             {
                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                PostId = reader.GetInt32(reader.GetOrdinal("PostId")),
-                UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
+                //PostId = reader.GetInt32(reader.GetOrdinal("PostId")),
+                //UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                 Subject = reader.GetString(reader.GetOrdinal("Subject")),
                 Content = reader.GetString(reader.GetOrdinal("Content")),
-                CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
+                //CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
             };
         }
     }
