@@ -115,7 +115,7 @@ namespace TabloidMVC.Controllers
             userId = userProfile.Id;
             try
             {
-                if (userProfile.Activated == true )
+                if (userProfile.Activated == false )
                 {
                     _UserProfileRepository.DeactivateUser(userId);
 
