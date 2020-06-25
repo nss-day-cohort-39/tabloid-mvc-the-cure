@@ -59,10 +59,11 @@ namespace TabloidMVC.Controllers
             }
         }
 
-        public IActionResult Edit(int id)
+        public IActionResult Edit(int id, int postId)
         {
             CommentIndexViewModel commVM = new CommentIndexViewModel();
             commVM.Comment = _commentRepo.GetCommentById(id);
+            commVM.Comment.PostId = postId;
             return View(commVM);
         }
 
@@ -72,10 +73,12 @@ namespace TabloidMVC.Controllers
         {
             try
             {
+                commVM.Comment.Id = id;
+                commVM.Comment.PostId = _commentRepo.GetCommentById(id).PostId;
                 commVM.Comment.UserProfileId = GetCurrentUserProfileId();
                 commVM.Comment.CreateDateTime = DateTime.Now;
                 _commentRepo.EditComment(commVM.Comment);
-                return RedirectToAction("Details", new { id = commVM.Comment.Id });
+                return RedirectToAction("Index", new { id = commVM.Comment.PostId });
             }
             catch
             {

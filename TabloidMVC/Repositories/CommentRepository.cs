@@ -56,6 +56,7 @@ namespace TabloidMVC.Repositories
                     cmd.CommandText = @"
                         SELECT 
                             Id,
+                            PostId,
                             Subject,
                             Content
                         FROM Comment
@@ -118,14 +119,15 @@ namespace TabloidMVC.Repositories
                     cmd.CommandText = @"
                         UPDATE Comment
                         SET 
-                            //PostId = @PostId,
+                            PostId = @PostId,
                             Subject = @Subject,
                             Content = @Content
                         WHERE Id = @id
                     ";
                     cmd.Parameters.AddWithValue("@Subject", comment.Subject);
                     cmd.Parameters.AddWithValue("@Content", comment.Content);
-                    //cmd.Parameters.AddWithValue("@PostId", comment.PostId);
+                    cmd.Parameters.AddWithValue("@PostId", comment.PostId);
+                    cmd.Parameters.AddWithValue("@id", comment.Id);
                     cmd.ExecuteNonQuery();
                 }
             }
@@ -136,7 +138,7 @@ namespace TabloidMVC.Repositories
             return new Comment()
             {
                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
-                //PostId = reader.GetInt32(reader.GetOrdinal("PostId")),
+                PostId = reader.GetInt32(reader.GetOrdinal("PostId")),
                 //UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                 Subject = reader.GetString(reader.GetOrdinal("Subject")),
                 Content = reader.GetString(reader.GetOrdinal("Content")),
