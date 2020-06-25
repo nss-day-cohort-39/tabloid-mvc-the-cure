@@ -5,6 +5,7 @@ using TabloidMVC.Repositories;
 using System;
 using System.Security.Claims;
 using TabloidMVC.Models.ViewModels;
+using TabloidMVC.Models;
 
 namespace TabloidMVC.Controllers
 {
@@ -83,6 +84,28 @@ namespace TabloidMVC.Controllers
             catch
             {
                 return View(commVM);
+            }
+        }
+
+        public IActionResult Delete(int id)
+        {
+            var comment = _commentRepo.GetCommentById(id);
+            return View(comment);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(Comment comment, int id)
+        {
+            try
+            {
+                comment.PostId = _commentRepo.GetCommentById(id).PostId;
+                _commentRepo.DeleteComment(id);
+                return RedirectToAction("Index", new { id = comment.PostId });
+            }
+            catch
+            {
+                return View(comment);
             }
         }
 

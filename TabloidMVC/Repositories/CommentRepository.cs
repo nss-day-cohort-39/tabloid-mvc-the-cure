@@ -132,6 +132,25 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+        public void DeleteComment(int id)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM Comment
+                            WHERE Id = @id
+                        ";
+
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
 
         private Comment NewCommentFromReader(SqlDataReader reader)
         {
@@ -139,10 +158,8 @@ namespace TabloidMVC.Repositories
             {
                 Id = reader.GetInt32(reader.GetOrdinal("Id")),
                 PostId = reader.GetInt32(reader.GetOrdinal("PostId")),
-                //UserProfileId = reader.GetInt32(reader.GetOrdinal("UserProfileId")),
                 Subject = reader.GetString(reader.GetOrdinal("Subject")),
                 Content = reader.GetString(reader.GetOrdinal("Content")),
-                //CreateDateTime = reader.GetDateTime(reader.GetOrdinal("CreateDateTime")),
             };
         }
     }
