@@ -28,7 +28,13 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+            var userProfile = _UserProfileRepository.GetUserById(id);
+            if (userProfile.ImageLocation == null)
+            {
+                userProfile.ImageLocation = "https://static1.squarespace.com/static/54b7b93ce4b0a3e130d5d232/54b7cd91e4b0b6572f771175/5a9924d20d92970572b7c3b6/1519986489468/icon.png?format=500w";
+            }
+            return View(userProfile);
+
         }
 
         // GET: UserProfileController/Create
