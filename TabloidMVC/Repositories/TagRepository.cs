@@ -68,6 +68,7 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+        
         public Tag GetTagById(int id)
         {
             using (var conn = Connection)
