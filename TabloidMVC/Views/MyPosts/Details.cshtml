@@ -36,5 +36,9 @@
         <section class="row">
             <p class="col-sm-12 mt-5">@Html.DisplayFor(model => model.Content)</p>
         </section>
+
+        <div>
+            <a class="btn btn-primary btn-med" asp-area="" asp-controller="Comment" asp-action="Index" asp-route-id="@Model.Id">View Comments</a>
+        </div>
     </div>
 </div>
