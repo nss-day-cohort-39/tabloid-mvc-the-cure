@@ -72,6 +72,66 @@ namespace TabloidMVC.Controllers
                 return View(vm);
             }
         }
+        public IActionResult Delete(int id)
+        {
+            //int UserProfileId = GetCurrentUserProfileId();
+            var post = _postRepository.GetPublishedPostById(id);
+            return View(post);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(int id, Post post)
+        {
+            try
+            {
+                _postRepository.DeletePost(id);
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                // If something goes wrong, just keep the user on the same page so they can try again
+                return View(post);
+            }
+        }
+
+        public IActionResult Edit(int id)
+        {
+            PostCreateViewModel vm = new PostCreateViewModel();
+            vm.CategoryOptions = _categoryRepository.GetAllCategories();
+            vm.Post = _postRepository.GetPublishedPostById(id);
+
+            return View(vm);
+        }
+
+        // POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(int id, PostCreateViewModel vm)
+        {
+            try
+            {
+                vm.CategoryOptions = _categoryRepository.GetAllCategories();
+                vm.Post.UserProfileId = GetCurrentUserProfileId();
+                vm.Post.Id = id;
+
+
+
+                vm.Post.CreateDateTime = DateAndTime.Now;
+
+                _postRepository.UpdatePost(vm.Post);
+
+                return RedirectToAction("Details", new { id = vm.Post.Id });
+            }
+            catch
+            {
+                vm.CategoryOptions = _categoryRepository.GetAllCategories();
+                return View(vm);
+            }
+
+
+        }
 
         private int GetCurrentUserProfileId()
         {
