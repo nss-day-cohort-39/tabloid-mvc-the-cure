@@ -41,7 +41,7 @@ namespace TabloidMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(CommentIndexViewModel commVM, int id)
+        public IActionResult Create(CommentIndexViewModel commVM, int id)
         {
             try
             {
@@ -55,6 +55,33 @@ namespace TabloidMVC.Controllers
             catch (Exception ex)
             {
                 commVM.PostComments = _commentRepo.GetCommentsByPostId(id);
+                return View(commVM);
+            }
+        }
+
+        public IActionResult Edit(int id, int postId)
+        {
+            CommentIndexViewModel commVM = new CommentIndexViewModel();
+            commVM.Comment = _commentRepo.GetCommentById(id);
+            commVM.Comment.PostId = postId;
+            return View(commVM);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Edit(CommentIndexViewModel commVM, int id)
+        {
+            try
+            {
+                commVM.Comment.Id = id;
+                commVM.Comment.PostId = _commentRepo.GetCommentById(id).PostId;
+                commVM.Comment.UserProfileId = GetCurrentUserProfileId();
+                commVM.Comment.CreateDateTime = DateTime.Now;
+                _commentRepo.EditComment(commVM.Comment);
+                return RedirectToAction("Index", new { id = commVM.Comment.PostId });
+            }
+            catch
+            {
                 return View(commVM);
             }
         }
