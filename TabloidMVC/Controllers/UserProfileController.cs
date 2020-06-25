@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
+using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Controllers
@@ -14,10 +15,13 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController
 
         private readonly UserProfileRepository _UserProfileRepository;
+        private readonly UserTypeRepository _UserTypeRepository;
 
         public UserProfileController(IConfiguration config)
         {
             _UserProfileRepository = new UserProfileRepository(config);
+            _UserTypeRepository = new UserTypeRepository(config);
+
         }
         public ActionResult Index()
         {
@@ -61,13 +65,17 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            UPEditViewModel vm = new UPEditViewModel();
+            vm.UserTypes = _UserTypeRepository.GetAllUserTypes();
+            vm.UserProfile = _UserProfileRepository.GetUserById(id);
+
+            return View(vm);
         }
 
         // POST: UserProfileController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, UPEditViewModel vm)
         {
             try
             {
