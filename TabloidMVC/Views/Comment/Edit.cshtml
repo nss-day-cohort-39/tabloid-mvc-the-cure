@@ -28,7 +28,7 @@
         </div>
     </div>
     <div class="row justify-content-center">
-        <a asp-action="Index">Back to List</a>
+        <a asp-controller="Comment" asp-route-id="@Model.Comment.PostId" asp-action="Index">Back to List</a>
     </>
 
         @section Scripts {
