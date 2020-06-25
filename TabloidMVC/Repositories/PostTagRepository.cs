@@ -120,6 +120,7 @@ namespace TabloidMVC.Repositories
         {
             return new PostTag()
             {
+                Id = reader.GetInt32(reader.GetOrdinal("Id")),
                 PostId = reader.GetInt32(reader.GetOrdinal("PostId")),
                 TagId = reader.GetInt32(reader.GetOrdinal("TagId")),
             };

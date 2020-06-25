@@ -48,7 +48,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to Post</a>
+    <a asp-controller="Post" asp-action="Details"asp-route-id="@Model.Post.Id">Back to Post</a>
 </div>
 
 @section Scripts {

@@ -82,31 +82,8 @@ namespace TabloidMVC.Controllers
                         PostId = id,
                         TagId = tagId
                     };
+                    _postTagRepo.AddPostTag(newPostTag);
                 }
-                //foreach(Tag t in vm.TagsOnPost)
-                //{
-                //    if(t.Selected == true)
-                //    {
-                //        var postTag = _postTagRepo.GetPostTagByPostandTag(t.Id, id);
-                //        if(postTag == null)
-                //        {
-                //            var newPostTag = new PostTag()
-                //            {
-                //                PostId = id,
-                //                TagId = t.Id
-                //            };
-                //            _postTagRepo.AddPostTag(postTag);
-                //        }
-                //    }
-                //    else
-                //    {
-                //        var postTag = _postTagRepo.GetPostTagByPostandTag(t.Id, id);
-                //        if(postTag != null)
-                //        {
-                //            _postTagRepo.DeletePostTag(postTag.Id);
-                //        }
-                //    }
-                //}
                 return RedirectToAction("Details", "Post", new { id = id });
             }
             catch
