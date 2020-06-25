@@ -52,7 +52,7 @@ namespace TabloidMVC.Controllers
             var post = _postRepo.GetPublishedPostById(id);
             var vm = new TagIndexViewModel()
             {
-                PostTags = allTags,
+                TagsOnPost = allTags,
                 Post = post,
             };
             return View(vm);
@@ -65,24 +65,31 @@ namespace TabloidMVC.Controllers
         {
             try
             {
-                foreach(Tag t in vm.PostTags)
+                foreach(Tag t in vm.TagsOnPost)
                 {
-
                     if(t.Selected == true)
                     {
-                        var postTag = new PostTag()
+                        var postTag = _postTagRepo.GetPostTagByPostandTag(t.Id, id);
+                        if(postTag == null)
                         {
-                            PostId = id,
-                            TagId = t.Id
-                        };
-                        _postTagRepo.AddPostTag(postTag);
+                            var newPostTag = new PostTag()
+                            {
+                                PostId = id,
+                                TagId = t.Id
+                            };
+                            _postTagRepo.AddPostTag(postTag);
+                        }
                     }
                     else
                     {
-
+                        var postTag = _postTagRepo.GetPostTagByPostandTag(t.Id, id);
+                        if(postTag != null)
+                        {
+                            _postTagRepo.DeletePostTag(postTag.Id);
+                        }
                     }
                 }
-                return RedirectToAction("Details", new { id = id });
+                return RedirectToAction("Post", "Details", new { id = id });
             }
             catch
             {

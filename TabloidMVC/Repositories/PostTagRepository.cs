@@ -42,6 +42,39 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+        public PostTag GetPostTagByPostandTag(int tagId, int postId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                        SELECT
+                            pt.Id,
+                            pt.PostId,
+                            pt.TagId
+                        FROM PostTag pt
+                        JOIN Post p ON pt.PostId = p.Id
+                        WHERE pt.PostId = @postId AND pt.TagId = @tagId";
+
+                    cmd.Parameters.AddWithValue("@postId", postId);
+                    cmd.Parameters.AddWithValue("@tagId", tagId);
+
+                    var reader = cmd.ExecuteReader();
+                    PostTag postTag = null;
+
+                    if (reader.Read())
+                    {
+                        postTag = NewPostTagFromReader(reader);
+                    }
+
+                    reader.Close();
+
+                    return postTag;
+                }
+            }
+        }
         public void AddPostTag(PostTag postTag)
         {
             using (SqlConnection conn = Connection)
@@ -51,7 +84,7 @@ namespace TabloidMVC.Repositories
                 {
                     cmd.CommandText = @"
                     INSERT INTO PostTag (PostId, TagId)
-                    OUTPUT INSERTED.id
+                    OUTPUT INSERTED.Id
                     VALUES (@postId, @tagId);
                 ";
 

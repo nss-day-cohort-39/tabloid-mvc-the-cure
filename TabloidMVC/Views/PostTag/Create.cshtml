@@ -24,12 +24,13 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.PostTags)
+                        @foreach (var item in Model.TagsOnPost)
                         {
                             <tr>
-                                    <td>
-                                        <input type="checkbox" checked="@item.Selected" />
-                                    </td>
+                                <td>
+                                    <input asp-for="@item.Selected" type="checkbox" checked="@item.Selected" value="@item.Id" name="AreChecked"/>
+                                    @*<input name="AreChecked" type="hidden" value="false" />*@
+                                </td>
                                 <td>
                                     @item.Name
                                 </td>
@@ -37,7 +38,6 @@
                         }
                     </tbody>
                 </table>
-                <span asp-validation-for="Post.CategoryId" class="text-danger"></span>
             </div>
 
             <div class="form-group">
