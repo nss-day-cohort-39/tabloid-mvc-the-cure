@@ -46,7 +46,8 @@
                                 <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" asp-area="" asp-controller="Account" asp-action="Logout">LOGOUT</a>
                             </li>
                         }
-                        @if (User.Identity.IsAuthenticated && User.FindFirstValue(ClaimTypes.Role) == "2")
+
+                        else if  (User.Identity.IsAuthenticated && User.FindFirstValue(ClaimTypes.Role) == "2")
                         {
                             <li class="nav-item mx-0 mx-lg-1">
                                 <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" asp-area="" asp-controller="Home" asp-action="Index">HOME</a>
@@ -69,7 +70,6 @@
                             <li class="nav-item mx-0 mx-lg-1">
                                 <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" asp-area="" asp-controller="Account" asp-action="Logout">LOGOUT</a>
                             </li>
-
                         }
                         else
                         {
