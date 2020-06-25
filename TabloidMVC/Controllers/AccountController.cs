@@ -82,13 +82,14 @@ namespace TabloidMVC.Controllers
                 ModelState.AddModelError("Email", "Invalid email");
                 return View();
             }
-
             else if (userProfile.Activated == false)
             {
                 ModelState.AddModelError("Email", "You're dead to us; you've been deactivated ");
                 return View();
             }
-            var claims = new List<Claim>
+            else
+            {
+                var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, userProfile.Id.ToString()),
                 new Claim(ClaimTypes.Email, userProfile.Email),
@@ -97,14 +98,16 @@ namespace TabloidMVC.Controllers
 
             };
 
-            var claimsIdentity = new ClaimsIdentity(
-                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsIdentity = new ClaimsIdentity(
+                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity));
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
 
-            return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
+            }
+            
         }
 
         public async Task<IActionResult> Logout()
