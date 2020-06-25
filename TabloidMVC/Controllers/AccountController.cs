@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
 using System.Collections.Generic;
@@ -81,8 +82,14 @@ namespace TabloidMVC.Controllers
                 ModelState.AddModelError("Email", "Invalid email");
                 return View();
             }
-
-            var claims = new List<Claim>
+            else if (userProfile.Activated == false)
+            {
+                ModelState.AddModelError("Email", "You're dead to us; you've been deactivated ");
+                return View();
+            }
+            else
+            {
+                var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, userProfile.Id.ToString()),
                 new Claim(ClaimTypes.Email, userProfile.Email),
@@ -91,14 +98,16 @@ namespace TabloidMVC.Controllers
 
             };
 
-            var claimsIdentity = new ClaimsIdentity(
-                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+                var claimsIdentity = new ClaimsIdentity(
+                    claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity));
+                await HttpContext.SignInAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme,
+                    new ClaimsPrincipal(claimsIdentity));
 
-            return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Home");
+            }
+            
         }
 
         public async Task<IActionResult> Logout()
