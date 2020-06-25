@@ -177,5 +177,21 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+
+        public void DeactivateUser(int userId)
+        {
+            using (var conn = Connection)
+            {
+                conn.Open();
+                using (var cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                         UPDATE USERPROFILE SET Activated = 0 WHERE id = @id";
+                    cmd.Parameters.AddWithValue("@id", userId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
     }
 }
