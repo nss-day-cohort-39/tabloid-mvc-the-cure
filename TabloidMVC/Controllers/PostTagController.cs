@@ -63,33 +63,51 @@ namespace TabloidMVC.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult Create(TagIndexViewModel vm, int id)
         {
+            vm.Post = _postRepo.GetPublishedPostById(id);
+            vm.TagsOnPost = _tagRepository.GetTagsByPostId(id);
             try
             {
                 foreach(Tag t in vm.TagsOnPost)
                 {
-                    if(t.Selected == true)
+                    var postTag = _postTagRepo.GetPostTagByPostandTag(t.Id, id);
+                    if(postTag != null)
                     {
-                        var postTag = _postTagRepo.GetPostTagByPostandTag(t.Id, id);
-                        if(postTag == null)
-                        {
-                            var newPostTag = new PostTag()
-                            {
-                                PostId = id,
-                                TagId = t.Id
-                            };
-                            _postTagRepo.AddPostTag(postTag);
-                        }
-                    }
-                    else
-                    {
-                        var postTag = _postTagRepo.GetPostTagByPostandTag(t.Id, id);
-                        if(postTag != null)
-                        {
-                            _postTagRepo.DeletePostTag(postTag.Id);
-                        }
+                        _postTagRepo.DeletePostTag(postTag.Id);
                     }
                 }
-                return RedirectToAction("Post", "Details", new { id = id });
+                foreach(int tagId in vm.AreChecked)
+                {
+                    var newPostTag = new PostTag()
+                    {
+                        PostId = id,
+                        TagId = tagId
+                    };
+                }
+                //foreach(Tag t in vm.TagsOnPost)
+                //{
+                //    if(t.Selected == true)
+                //    {
+                //        var postTag = _postTagRepo.GetPostTagByPostandTag(t.Id, id);
+                //        if(postTag == null)
+                //        {
+                //            var newPostTag = new PostTag()
+                //            {
+                //                PostId = id,
+                //                TagId = t.Id
+                //            };
+                //            _postTagRepo.AddPostTag(postTag);
+                //        }
+                //    }
+                //    else
+                //    {
+                //        var postTag = _postTagRepo.GetPostTagByPostandTag(t.Id, id);
+                //        if(postTag != null)
+                //        {
+                //            _postTagRepo.DeletePostTag(postTag.Id);
+                //        }
+                //    }
+                //}
+                return RedirectToAction("Details", "Post", new { id = id });
             }
             catch
             {
