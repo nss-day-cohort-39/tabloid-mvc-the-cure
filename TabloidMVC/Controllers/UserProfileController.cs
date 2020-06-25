@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
-using TabloidMVC.Models.ViewModels;
+using TabloidMVC.Models;
 using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Controllers
@@ -15,13 +15,10 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController
 
         private readonly UserProfileRepository _UserProfileRepository;
-        private readonly UserTypeRepository _UserTypeRepository;
 
         public UserProfileController(IConfiguration config)
         {
             _UserProfileRepository = new UserProfileRepository(config);
-            _UserTypeRepository = new UserTypeRepository(config);
-
         }
         public ActionResult Index()
         {
@@ -65,17 +62,13 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController/Edit/5
         public ActionResult Edit(int id)
         {
-            UPEditViewModel vm = new UPEditViewModel();
-            vm.UserTypes = _UserTypeRepository.GetAllUserTypes();
-            vm.UserProfile = _UserProfileRepository.GetUserById(id);
-
-            return View(vm);
+            return View();
         }
 
         // POST: UserProfileController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, UPEditViewModel vm)
+        public ActionResult Edit(int id, IFormCollection collection)
         {
             try
             {
@@ -105,6 +98,39 @@ namespace TabloidMVC.Controllers
             catch
             {
                 return View();
+            }
+        }
+
+        public IActionResult DeactivateUser(int id)
+        {
+            //userId = userProfile.Id;
+            var userProfile = _UserProfileRepository.GetUserById(id);
+            return View(userProfile);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult DeactivateUser(int userId, UserProfile userProfile)
+        {
+            userId = userProfile.Id;
+            try
+            {
+                if (userProfile.Activated == true )
+                {
+                    _UserProfileRepository.DeactivateUser(userId);
+
+                }
+                else
+                {
+                    _UserProfileRepository.ReactivateUser(userId);
+                }
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                // If something goes wrong, just keep the user on the same page so they can try again
+                return View(userProfile);
             }
         }
     }
