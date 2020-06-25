@@ -42,6 +42,47 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+        public void AddPostTag(PostTag postTag)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                    INSERT INTO PostTag (PostId, TagId)
+                    OUTPUT INSERTED.id
+                    VALUES (@postId, @tagId);
+                ";
+
+                    cmd.Parameters.AddWithValue("@postId", postTag.PostId);
+                    cmd.Parameters.AddWithValue("@tagId", postTag.TagId);
+
+                    int id = (int)cmd.ExecuteScalar();
+
+                    postTag.Id = id;
+                }
+            }
+        }
+        public void DeletePostTag(int postTagId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM PostTag
+                            WHERE Id = @id
+                        ";
+
+                    cmd.Parameters.AddWithValue("@id", postTagId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
         private PostTag NewPostTagFromReader(SqlDataReader reader)
         {
             return new PostTag()

@@ -27,9 +27,9 @@
                         @foreach (var item in Model.PostTags)
                         {
                             <tr>
-                                <td>
-                                    <input type="checkbox" value="@item.Selected" />
-                                </td>
+                                    <td>
+                                        <input type="checkbox" checked="@item.Selected" />
+                                    </td>
                                 <td>
                                     @item.Name
                                 </td>

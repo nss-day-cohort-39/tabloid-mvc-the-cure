@@ -35,7 +35,6 @@ namespace TabloidMVC.Controllers
             {
                 foundTagIds.Add(pt.TagId);
             }
-            //2. take the tagId's that are not associated and add to different list of int Ids
             // loop through allTags, if Id is present in list 1 assign boolean true, if not assign boolean false (contains)
             foreach(Tag t in allTags)
             {
@@ -66,7 +65,24 @@ namespace TabloidMVC.Controllers
         {
             try
             {
-                return RedirectToAction("Index");
+                foreach(Tag t in vm.PostTags)
+                {
+
+                    if(t.Selected == true)
+                    {
+                        var postTag = new PostTag()
+                        {
+                            PostId = id,
+                            TagId = t.Id
+                        };
+                        _postTagRepo.AddPostTag(postTag);
+                    }
+                    else
+                    {
+
+                    }
+                }
+                return RedirectToAction("Details", new { id = id });
             }
             catch
             {
