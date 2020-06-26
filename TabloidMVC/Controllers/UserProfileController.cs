@@ -112,13 +112,25 @@ namespace TabloidMVC.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult DeactivateUser(int userId, UserProfile userProfile)
         {
+
             userId = userProfile.Id;
+            List<UserProfile> userProfiles = _UserProfileRepository.GetAllUsers();
+            int totalAdmins = userProfiles.Where(up => up.UserTypeId == 2).Count();
+
             try
             {
-                if (userProfile.Activated == true )
-                {
-                    _UserProfileRepository.DeactivateUser(userId);
 
+                if (userProfile.Activated == true)
+                {
+                    if (userProfile.UserTypeId == 2 && totalAdmins < 2)
+                    {
+                        ModelState.AddModelError("UserTypeId", "Make someone else an admin before this User Profile can be deactivated");
+                        return View();
+                    }
+                    else
+                    {
+                        _UserProfileRepository.DeactivateUser(userId);
+                    }
                 }
                 else
                 {
@@ -132,6 +144,7 @@ namespace TabloidMVC.Controllers
                 // If something goes wrong, just keep the user on the same page so they can try again
                 return View(userProfile);
             }
+
         }
     }
 }
