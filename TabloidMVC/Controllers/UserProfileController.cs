@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using TabloidMVC.Models;
+using TabloidMVC.Models.ViewModels;
 using TabloidMVC.Repositories;
 
 namespace TabloidMVC.Controllers
@@ -15,10 +16,14 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController
 
         private readonly UserProfileRepository _UserProfileRepository;
+        private readonly UserTypeRepository _UserTypeRepository;
+
 
         public UserProfileController(IConfiguration config)
         {
             _UserProfileRepository = new UserProfileRepository(config);
+            _UserTypeRepository = new UserTypeRepository(config);
+
         }
         public ActionResult Index()
         {
@@ -62,21 +67,44 @@ namespace TabloidMVC.Controllers
         // GET: UserProfileController/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+            var vm = new UPEditViewModel();
+            vm.UserProfile = _UserProfileRepository.GetUserById(id);
+            vm.UserTypes = _UserTypeRepository.GetAllUserTypes();
+
+
+            return View(vm);
         }
 
         // POST: UserProfileController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(int id, UPEditViewModel vm)
         {
+            vm.UserProfile.Id = id;
+            List<UserProfile> userProfiles = _UserProfileRepository.GetAllUsers();
+            int totalAdmins = userProfiles.Where(up => up.UserTypeId == 2).Count();
+
             try
             {
-                return RedirectToAction(nameof(Index));
+                if (vm.UserProfile.UserTypeId == 1 && totalAdmins < 2)
+                {
+                    vm.UserTypes = _UserTypeRepository.GetAllUserTypes();
+
+                    ModelState.AddModelError("UserProfile.UserTypeId", "Assign another admin before changing the final Admin to author");
+                    return View(vm);
+                }
+                else
+                {
+                    _UserProfileRepository.ChangeUserType(vm.UserProfile);
+
+                    //return RedirectToAction("Index");
+                    return RedirectToAction("Index");
+                }
             }
             catch
             {
-                return View();
+                vm.UserTypes = _UserTypeRepository.GetAllUserTypes();
+                return View("Index");
             }
         }
 
