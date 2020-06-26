@@ -116,6 +116,26 @@ namespace TabloidMVC.Repositories
                 }
             }
         }
+        public void DeleteAssociatedPostTags(int tagId)
+        {
+            using (SqlConnection conn = Connection)
+            {
+                conn.Open();
+
+                using (SqlCommand cmd = conn.CreateCommand())
+                {
+                    cmd.CommandText = @"
+                            DELETE FROM PostTag
+                            WHERE TagId = @id
+                        ";
+
+                    cmd.Parameters.AddWithValue("@id", tagId);
+
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
         private PostTag NewPostTagFromReader(SqlDataReader reader)
         {
             return new PostTag()

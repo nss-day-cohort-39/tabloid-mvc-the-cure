@@ -8,10 +8,13 @@ namespace TabloidMVC.Controllers
     public class TagController : Controller
     {
         private readonly TagRepository _tagRepository;
+        private readonly PostTagRepository _postTagRepository;
+
 
         public TagController(IConfiguration config)
         {
             _tagRepository = new TagRepository(config);
+            _postTagRepository = new PostTagRepository(config);
         }
         // GET: TagController
         public ActionResult Index()
@@ -80,6 +83,7 @@ namespace TabloidMVC.Controllers
         {
             try
             {
+                _postTagRepository.DeleteAssociatedPostTags(tag.Id);
                 _tagRepository.DeleteTag(id);
                 return RedirectToAction("Index");
             }
