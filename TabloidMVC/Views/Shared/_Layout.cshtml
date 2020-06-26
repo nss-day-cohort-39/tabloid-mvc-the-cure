@@ -37,6 +37,9 @@
                                 <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" asp-area="" asp-controller="MyPosts" asp-action="Index">MY POSTS</a>
                             </li>
                             <li class="nav-item mx-0 mx-lg-1">
+                                <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" asp-area="" asp-controller="Sub" asp-action="Index">SUBSCRIPTIONS</a>
+                            </li>
+                            <li class="nav-item mx-0 mx-lg-1">
                                 <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" asp-area="" asp-controller="Category" asp-action="Index">CATEGORIES</a>
                             </li>
                             <li class="nav-item mx-0 mx-lg-1">
@@ -47,7 +50,7 @@
                             </li>
                         }
 
-                        else if  (User.Identity.IsAuthenticated && User.FindFirstValue(ClaimTypes.Role) == "2")
+                        else if (User.Identity.IsAuthenticated && User.FindFirstValue(ClaimTypes.Role) == "2")
                         {
                             <li class="nav-item mx-0 mx-lg-1">
                                 <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" asp-area="" asp-controller="Home" asp-action="Index">HOME</a>
@@ -57,6 +60,9 @@
                             </li>
                             <li class="nav-item mx-0 mx-lg-1">
                                 <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" asp-area="" asp-controller="MyPosts" asp-action="Index">MY POSTS</a>
+                            </li>
+                            <li class="nav-item mx-0 mx-lg-1">
+                                <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" asp-area="" asp-controller="Sub" asp-action="Index">SUBSCRIPTIONS</a>
                             </li>
                             <li class="nav-item mx-0 mx-lg-1">
                                 <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" asp-area="" asp-controller="Category" asp-action="Index">CATEGORIES</a>
