@@ -5,7 +5,7 @@
 }
 
 
-<div class="container pt-5">
+<div class="container pt-5 w-50">
     <h1>Tags</h1>
 
     <p>
@@ -17,16 +17,17 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Name)
                 </th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model)
             {
-                <tr>
+                <tr class="justify-content-md-between">
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
-                    <td>
+                    <td class="w-25">
                         <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-outline-primary mx-1" title="Edit">
                             <i class="fas fa-pencil-alt"></i>
                         </a>
