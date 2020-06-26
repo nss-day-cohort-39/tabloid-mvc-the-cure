@@ -114,9 +114,10 @@ namespace TabloidMVC.Controllers
         {
 
             userId = userProfile.Id;
+            userProfile= _UserProfileRepository.GetUserById(userId);
             List<UserProfile> userProfiles = _UserProfileRepository.GetAllUsers();
-            int totalAdmins = userProfiles.Where(up => up.UserTypeId == 2).Count();
 
+            int totalAdmins = userProfiles.Where(up => up.UserTypeId == 2).Count();
             try
             {
 
@@ -124,8 +125,8 @@ namespace TabloidMVC.Controllers
                 {
                     if (userProfile.UserTypeId == 2 && totalAdmins < 2)
                     {
-                        ModelState.AddModelError("UserTypeId", "Make someone else an admin before this User Profile can be deactivated");
-                        return View();
+                        ModelState.AddModelError("UserTypeId","Assign another admin before deactivating the final admin");
+                        return View(userProfile);
                     }
                     else
                     {

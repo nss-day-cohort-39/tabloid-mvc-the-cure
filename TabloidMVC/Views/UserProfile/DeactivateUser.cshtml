@@ -17,79 +17,79 @@
 
             <h3>Are you sure you want to reactivate this user?</h3>
         }
-        <div>
-            <dl class="row">
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.DisplayName)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.DisplayName)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.Email)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Email)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.CreateDateTime)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.CreateDateTime)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.ImageLocation)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.ImageLocation)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.UserType.Name)
-                </dt>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.UserType.Name)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.UserTypeId)
-                </dd>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.UserTypeId)
-                </dd>
-                <dt class="col-sm-2">
-                    Activation Status:
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.Activated)
-                </dd>
-                <dt class="col-sm-2">
-                    @Html.DisplayNameFor(model => model.FullName)
-                </dt>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.FullName)
-                </dd>
-                <dd class="col-sm-10">
-                    @Html.DisplayFor(model => model.UserTypeId)
-                </dd>
-            </dl>
-            @if (Model.Activated == true)
-            {
+    <div>
+        <dl class="row">
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.DisplayName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.DisplayName)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.CreateDateTime)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.CreateDateTime)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.ImageLocation)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.ImageLocation)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.UserType.Name)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.UserType.Name)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.UserTypeId)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.UserTypeId)
+            </dd>
+            <dt class="col-sm-2">
+                Activation Status:
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.Activated)
+            </dd>
+            <dt class="col-sm-2">
+                @Html.DisplayNameFor(model => model.FullName)
+            </dt>
+            <dd class="col-sm-10">
+                @Html.DisplayFor(model => model.FullName)
+            </dd>
 
-        <form asp-action="DeactivateUser">
-            <input type="hidden" asp-for="Activated" />
-            @*<input type="hidden" asp-for="UserTypeId" />*@
-            <input type="submit" value="Deactivate User" class="btn btn-danger" /> |
-            <a asp-action="Index">Back to List</a>
-        </form>
-            }
-            else
-            {
-        <form asp-action="DeactivateUser">
-            <input type="hidden" asp-for="Activated" />
-            <input type="submit" value="Reactivate User" class="btn btn-danger" /> |
-            <a asp-action="Index">Back to List</a>
-        </form>
-            }
+        </dl>
+        @if (Model.Activated == true)
+        {
 
+    <form asp-action="DeactivateUser">
+        <input type="hidden" asp-for="Activated" />
+        <input type="hidden" asp-for="UserTypeId" />
+        <div class="text-danger"> @Html.ValidationMessageFor(m => m.UserTypeId)
         </div>
+        <input type="submit" value="Deactivate User" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+        }
+        else
+        {
+    <form asp-action="DeactivateUser">
+        <input type="hidden" asp-for="Activated" />
+        <input type="submit" value="Reactivate User" class="btn btn-danger" /> |
+        <a asp-action="Index">Back to List</a>
+    </form>
+        }
+
+    </div>
     </div>
 
