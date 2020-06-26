@@ -25,6 +25,7 @@
                     </a>
                 </div>
                 <div>
+                    <a class="btn btn-primary btn-med" asp-area="" asp-controller="Post" asp-action="MakeSub" asp-route-authorId="@Model.Post.UserProfileId">Subscribe to Author</a>
                     <a class="btn btn-primary btn-med" asp-area="" asp-controller="Comment" asp-action="Index" asp-route-id="@Model.Post.Id">Comments</a>
                     <a class="btn btn-primary btn-med" asp-area="" asp-controller="PostTag" asp-action="Create" asp-route-id="@Model.Post.Id">Tags</a>
                 </div>

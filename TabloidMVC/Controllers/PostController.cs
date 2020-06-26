@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualBasic;
+using System;
 using System.Security.Claims;
 using TabloidMVC.Models;
 using TabloidMVC.Models.ViewModels;
@@ -15,12 +16,14 @@ namespace TabloidMVC.Controllers
         private readonly PostRepository _postRepository;
         private readonly CategoryRepository _categoryRepository;
         private readonly TagRepository _tagRepository;
+        private readonly SubRepository _subRepository;
 
         public PostController(IConfiguration config)
         {
             _postRepository = new PostRepository(config);
             _categoryRepository = new CategoryRepository(config);
             _tagRepository = new TagRepository(config);
+            _subRepository = new SubRepository(config);
         }
 
         public IActionResult Index()
@@ -75,6 +78,28 @@ namespace TabloidMVC.Controllers
             {
                 vm.CategoryOptions = _categoryRepository.GetAllCategories();
                 return View(vm);
+            }
+        }
+        
+        public ActionResult MakeSub(int authorId)
+        {
+            try
+            {
+                Sub newSub = new Sub()
+                {
+                    SubscriberUserProfileId = GetCurrentUserProfileId(),
+                    ProviderUserProfileId = authorId,
+                    BeginDateTime = DateTime.Now,
+                    EndDateTime = null
+                };
+                _subRepository.AddSub(newSub);
+
+
+                return RedirectToAction("Index");
+            }
+            catch
+            {
+                return RedirectToAction("Index");
             }
         }
 
